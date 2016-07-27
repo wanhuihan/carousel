@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Carousel Demo</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+	<style type="text/css">
+		* {
+			padding:0;
+			margin:0;
+		}
+		.carousel .prevBtn, .carousel .nextBtn, .carousel .slideBar {
+			display: inline-block;
+			height:600px;
+			vertical-align: top;
+		}
+		.prevBtn, .nextBtn {
+			line-height: 600px;
+		}
+		.prevBtn img, .nextBtn img {
+			vertical-align: middle;
+		}
+		.slideBar {
+			width: 900px;			
+			position: relative;
+			overflow: hidden;
+		}		
+		.slideBar ul li {
+			display: block;
+			position: absolute;
+			width: 900px;
+			height: 600px;		
+			opacity: 0;
+			transition: opacity 0.8s;
+			-moz-transition: opacity 0.8s;
+			-webkit-transition: opacity 0.8s;			
+		}
+		.slideBar li.active {
+			opacity:1;
+			transition: opacity 0.8s;
+			-moz-transition: opacity 0.8s;
+			-webkit-transition: opacity 0.8s;
+		}
+		.slideBar ul {
+			list-style: none;
+			width:300%;
+		}
+		.slideBar ul:after {
+			clear:both;
+			display: block;
+			content: "";
+		}		
+		.slideBar .sliderText {
+			position: absolute;	
+			z-index: 1;
+			width: 100%;
+			padding: 45px 75px;
+			box-sizing: border-box;
+		}
+		.slideBar .sliderText > div {
+			background: rgba(0,0,0,0.5);
+			text-align: center;
+			padding:24px 0 15px;
+			font-family: Century Gothic;
+		}
+		.slideBar .sliderText > div p {
+			text-transform: uppercase;
+			font-size: 31px;
+			color: #fff;
+			line-height: 31px;
+		}
+		.slideBar .sliderText > div a {
+			display: inline-block;
+			padding-top: 40px;	
+			color: #cc6121;
+			text-decoration: none;
+			font-size: 14px;
+		}
+
+		
+	</style>
+	<script src="//cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+</head>
+<body>
+
+	<div class="carousel">
+		<div class="prevBtn"><img src="assets/arrow-left.png"></div>
+		<div class="slideBar">
+			<ul>
+				<li class="active">
+					<div class="sliderText">
+						<div>
+							<p>teaser title comes here</p>
+							<a href="#">Click for more</a>
+						</div>
+					</div>
+					<img src="assets/slide-1.jpg">
+				</li>
+				<li>
+					<div class="sliderText">
+						<div>
+							<p>teaser title comes here 2</p>
+							<a href="#">Click for more</a>
+						</div>
+					</div>				
+					<img src="assets/slide-2.jpg">
+				</li>
+				<li>
+					<div class="sliderText">
+						<div>
+							<p>teaser title comes here 3</p>
+							<a href="#">Click for more</a>
+						</div>
+					</div>				
+					<img src="assets/slide-3.jpg">
+				</li>
+			</ul>
+		</div>
+		<div class="nextBtn"><img src="assets/arrow-right.png"></div>
+	</div>
+
+	<script type="text/javascript">
+		var carouselBox = $(".carousel");
+		var autoPlay = false; // value for auto play on or off, default value is off;
+
+		// click function for slide to the previous image box; 
+		carouselBox.find(".prevBtn").bind("click", function(){
+			autoPlay = false; // switch off the auto play;
+			clearInterval(autoPlayFun); // clear the auto play 
+			clearTimeout(autoPlayOn) // clear the function to set the value for switch on auto play
+			resetAutoPlay(); // re create setInterval and SetTimeout function to check the user click
+			var prev = carouselBox.find("li.active").prev("li");
+
+			// if the last image box is active, it will trun back to the first one
+			if (!prev.length) { 
+				var prev = carouselBox.find("li:last-child");	
+			}	
+			carouselBox.find("li").removeClass("active");
+			prev.addClass("active");
+		})
+
+		// click function for slide to the next image box; 
+		carouselBox.find(".nextBtn").bind("click", function(){
+			autoPlay = false;
+			clearInterval(autoPlayFun);
+			clearTimeout(autoPlayOn)
+			resetAutoPlay();
+			carouselFun();				
+		})
+
+		// every 5 seconds will switch on auto play function if autoPlay value is false;
+		var autoPlayFun = setInterval(function() {
+			if (autoPlay) {
+				carouselFun();
+			}
+		},5000);
+
+		// every 5 seconds check the user click the button or not, if no click, t will swtich on the auto play function and set the atuoPlay as true;
+		var autoPlayOn = setTimeout(function(){
+			autoPlay = true;
+			carouselFun();
+		}, 5000);
+	
+		// to recreate setInterval function and setTimeout function when click prev&next button every time;
+		function resetAutoPlay() {
+			autoPlayOn = setTimeout(function(){
+				autoPlay = true;
+			}, 5000);
+
+			autoPlayFun = setInterval(function() {
+				if (autoPlay) {
+					carouselFun();
+				}
+			},5000);
+		}
+
+		// slide show function to find set the next image box as active, this is only for the clockwise;
+		function carouselFun() {
+			var next = carouselBox.find("li.active").next("li");
+			// if the last image is active, it will trun back to the first one
+			if (!next.length) { 
+				var next = carouselBox.find("li:first-child");	
+			}	
+			carouselBox.find("li").removeClass("active");
+			next.addClass("active");			
+		}
+
+	</script>
+</body>
+
+</html>
